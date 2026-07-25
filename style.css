@@ -1,0 +1,568 @@
+/* ================================================================
+   🎨 CSS VARIABLES - กำหนดสีและค่าต่างๆ ที่ใช้ทั่วทั้งเว็บ
+   ================================================================ */
+:root {
+  --kp-cream: #f7f5ed;
+  --kp-grid: #e5e2d8;
+  --kp-pink: #ffb7c5;
+  --kp-pink2: #ff8fab;
+  --kp-pink3: #e0607c;
+  --kp-text: #444;
+  --kp-muted: #888;
+  --kp-glass: rgba(255, 255, 255, 0.55);
+  --kp-border: rgba(255, 255, 255, 0.6);
+}
+
+/* ================================================================
+   🔄 RESET & BASE - รีเซ็ตค่าเริ่มต้น
+   ================================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--kp-cream);
+  background-image:
+    linear-gradient(var(--kp-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--kp-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ================================================================
+   📦 CONTAINER - กล่องหลักครอบเนื้อหา
+   ================================================================ */
+.kp-box {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ================================================================
+   ✨ CENTER TITLE - ตัวอักษร KAWAII ตรงกลาง
+   ================================================================ */
+.kp-center {
+  text-align: center;
+  z-index: 10;
+  animation: titleFloat 4s ease-in-out infinite;
+}
+
+.kp-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, var(--kp-pink), var(--kp-pink2), var(--kp-pink3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border: 2.5px dashed color-mix(in srgb, var(--kp-pink) 50%, var(--kp-grid));
+  padding: 12px 48px;
+  border-radius: 24px;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  display: inline-block;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+/* แสงวิบวับที่ชื่อ */
+.kp-title::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: shimmer 3s infinite;
+}
+
+.kp-sub {
+  margin-top: 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--kp-muted);
+  letter-spacing: 1px;
+}
+
+/* ================================================================
+   🃏 CARDS - การ์ดสิ่งของรอบตัวทั้ง 6 ใบ
+   ================================================================ */
+.kp-card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid var(--kp-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 20;
+  min-width: 90px;
+}
+
+.kp-card:hover {
+  transform: scale(1.2) rotate(0deg) !important;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 40px rgba(255, 183, 197, 0.3);
+  border-color: var(--kp-pink);
+}
+
+.kp-card svg {
+  width: 56px;
+  height: 56px;
+  transition: transform 0.3s;
+}
+
+.kp-card:hover svg {
+  transform: translateY(-4px);
+}
+
+.kp-card span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--kp-text);
+  transition: color 0.3s;
+}
+
+.kp-card:hover span {
+  color: var(--kp-pink3);
+}
+
+/* ตำแหน่งการ์ดแต่ละใบ */
+.kp-hp { top: 80px; left: 50%; transform: translateX(-50%) rotate(-5deg); animation: cardFloat 3.5s ease-in-out infinite; }
+.kp-cf { top: 160px; right: 80px; transform: rotate(8deg); animation: cardFloat 3.8s ease-in-out infinite 0.5s; }
+.kp-lp { bottom: 200px; right: 60px; transform: rotate(5deg); animation: cardFloat 4s ease-in-out infinite 1s; }
+.kp-lg { bottom: 80px; left: 50%; transform: translateX(-50%) rotate(-3deg); animation: cardFloat 3.6s ease-in-out infinite 1.5s; }
+.kp-bk { bottom: 200px; left: 60px; transform: rotate(-8deg); animation: cardFloat 3.9s ease-in-out infinite 2s; }
+.kp-cl { top: 160px; left: 80px; transform: rotate(-6deg); animation: cardFloat 3.7s ease-in-out infinite 2.5s; }
+
+/* ================================================================
+   🪟 MODAL OVERLAY - พื้นหลังดำโปร่งตอนเปิดป็อปอัพ
+   ================================================================ */
+.kp-ov {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.kp-ov.on {
+  display: flex;
+  opacity: 1;
+}
+
+/* ================================================================
+   🎀 GLASS MODAL - กล่องป็อปอัพแบบกระจกใส
+   ================================================================ */
+.kp-md {
+  width: 420px;
+  max-width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 28px;
+  border-radius: 24px;
+  background: var(--kp-glass);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1.5px solid var(--kp-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transform: scale(0.85) translateY(20px);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kp-ov.on .kp-md {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.kp-hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.kp-hd h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--kp-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ปุ่มปิด (X) */
+.kp-x {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--kp-text);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.kp-x:hover {
+  background: rgba(255, 96, 124, 0.15);
+  color: var(--kp-pink3);
+  transform: rotate(90deg);
+}
+
+/* ================================================================
+   🏷️ GENRE TABS - แท็บสลับหมวดหมู่เพลง
+   ================================================================ */
+.kp-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 16px;
+  scrollbar-width: none;
+}
+
+.kp-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.kp-tab {
+  flex-shrink: 0;
+  border: 1.5px solid var(--kp-border);
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--kp-muted);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+
+.kp-tab:hover {
+  background: rgba(255, 183, 197, 0.2);
+  border-color: var(--kp-pink);
+}
+
+.kp-tab.on {
+  background: linear-gradient(135deg, var(--kp-pink), var(--kp-pink2));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(255, 143, 171, 0.4);
+}
+
+/* ================================================================
+   🎶 SONG LIST - รายการเพลง
+   ================================================================ */
+.kp-sl {
+  list-style: none;
+  margin-bottom: 20px;
+  display: none;
+  animation: fadeSlideUp 0.3s;
+}
+
+.kp-sl.on {
+  display: block;
+}
+
+.kp-si {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin-bottom: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.kp-si::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--kp-pink);
+  transform: scaleY(0);
+  transition: transform 0.25s;
+  border-radius: 0 4px 4px 0;
+}
+
+.kp-si:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.kp-si:hover::before {
+  transform: scaleY(1);
+}
+
+.kp-si.play {
+  background: linear-gradient(90deg, rgba(255, 183, 197, 0.25), rgba(255, 255, 255, 0.5));
+}
+
+.kp-si.play::before {
+  transform: scaleY(1);
+}
+
+/* วงกลมไอคอนเล่น */
+.kp-ic {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--kp-pink), var(--kp-pink2));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(255, 143, 171, 0.3);
+  transition: all 0.25s;
+}
+
+.kp-si:hover .kp-ic {
+  transform: scale(1.1);
+  box-shadow: 0 5px 16px rgba(255, 143, 171, 0.5);
+}
+
+.kp-si.play .kp-ic {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.kp-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.kp-st {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--kp-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kp-sa {
+  font-size: 0.78rem;
+  color: var(--kp-muted);
+  margin-top: 2px;
+}
+
+/* ================================================================
+   🎚️ PLAYER BAR - แถบควบคุมการเล่นเพลง
+   ================================================================ */
+.kp-bar {
+  margin-top: 8px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1.5px solid var(--kp-border);
+}
+
+.kp-np {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--kp-text);
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kp-pr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kp-tm {
+  font-size: 0.7rem;
+  color: var(--kp-muted);
+  font-weight: 600;
+  min-width: 36px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.kp-trk {
+  flex: 1;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.kp-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--kp-pink), var(--kp-pink2));
+  border-radius: 999px;
+  transition: width 0.1s linear;
+  position: relative;
+}
+
+.kp-fill::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 2.5px solid var(--kp-pink2);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(255, 143, 171, 0.4);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.kp-trk:hover .kp-fill::after {
+  opacity: 1;
+}
+
+/* ================================================================
+   🎼 FLOATING NOTES - โน้ตดนตรีลอยขึ้น
+   ================================================================ */
+.kp-note {
+  position: fixed;
+  font-size: 1.2rem;
+  color: var(--kp-pink);
+  pointer-events: none;
+  z-index: 2000;
+  animation: noteFloat 1.2s ease-out forwards;
+  font-weight: 700;
+}
+
+/* ================================================================
+   📦 CONTENT GRID (สำหรับ modal อื่นๆ)
+   ================================================================ */
+.kp-grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.kp-it {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1.5px solid var(--kp-border);
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.kp-it:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: var(--kp-pink);
+}
+
+.kp-it svg {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 8px;
+}
+
+.kp-it-t {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--kp-text);
+}
+
+.kp-it-d {
+  font-size: 0.75rem;
+  color: var(--kp-muted);
+  margin-top: 4px;
+}
+
+/* ================================================================
+   🎬 KEYFRAMES - อนิเมชั่นต่างๆ
+   ================================================================ */
+@keyframes titleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+  50% { transform: translateY(-10px) rotate(var(--r, 0deg)); }
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+@keyframes noteFloat {
+  0% { transform: translate(0, 0) scale(0.8) rotate(0deg); opacity: 1; }
+  100% { transform: translate(20px, -60px) scale(1.3) rotate(20deg); opacity: 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================================================
+   📱 RESPONSIVE - ปรับแต่งสำหรับมือถือ
+   ================================================================ */
+@media (max-width: 640px) {
+  .kp-box { height: 500px; }
+  .kp-title { font-size: 2.2rem; padding: 10px 28px; }
+  .kp-card { padding: 12px; min-width: 70px; }
+  .kp-card svg { width: 44px; height: 44px; }
+  .kp-card span { font-size: 0.75rem; }
+  .kp-md { width: 100%; padding: 20px; }
+  .kp-hp { top: 60px; }
+  .kp-cf { top: 130px; right: 20px; }
+  .kp-lp { bottom: 160px; right: 10px; }
+  .kp-lg { bottom: 60px; }
+  .kp-bk { bottom: 160px; left: 10px; }
+  .kp-cl { top: 130px; left: 20px; }
+  .kp-grid2 { grid-template-columns: 1fr; }
+}

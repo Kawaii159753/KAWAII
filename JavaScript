@@ -1,0 +1,179 @@
+// ================================================================
+// 🧠 JAVASCRIPT - ควบคุมการทำงานทั้งหมดของเว็บ
+// ================================================================
+
+// ========== ตัวแปรหลัก ==========
+let cur = null;       // เก็บ reference ของเพลงที่กำลังเล่น
+let playing = false;  // สถานะกำลังเล่นเพลงหรือไม่
+let timer = null;     // timer สำหรับอัปเดต progress bar
+let prog = 0;         // ความคืบหน้าปัจจุบัน (วินาที)
+let dur = 180;        // ความยาวเพลงสมมติ (3 นาที)
+
+// ========== ฟังก์ชันเปิด/ปิด Modal ==========
+
+/**
+ * เปิดป็อปอัพตามประเภทที่เลือก
+ * @param {string} t - ประเภทของการ์ด (music, coffee, tech, books, fashion, travel)
+ */
+function openM(t) {
+  const m = document.getElementById('m-' + t);
+  if (m) {
+    m.classList.add('on');
+    document.body.style.overflow = 'hidden'; // ป้องกันเลื่อนพื้นหลัง
+  }
+}
+
+/**
+ * ปิดป็อปอัพตามประเภท
+ * @param {string} t - ประเภทของการ์ด
+ */
+function closeM(t) {
+  const m = document.getElementById('m-' + t);
+  if (m) {
+    m.classList.remove('on');
+    document.body.style.overflow = '';
+  }
+  // ถ้าปิด modal เพลง ให้หยุดเล่นด้วย
+  if (t === 'music') stop();
+}
+
+/**
+ * ปิด modal เมื่อคลิกที่พื้นหลัง (overlay)
+ * @param {Event} e - event object
+ * @param {string} t - ประเภทของการ์ด
+ */
+function bgClose(e, t) {
+  if (e.target === e.currentTarget) {
+    closeM(t);
+  }
+}
+
+// ========== ฟังก์ชันสลับแท็บหมวดหมู่เพลง ==========
+
+/**
+ * สลับแท็บหมวดหมู่เพลง (ไทย/ญี่ปุ่น/เกาหลี/อังกฤษ)
+ * @param {HTMLElement} btn - ปุ่มที่ถูกกด
+ * @param {string} g - รหัสหมวดหมู่
+ */
+function tab(btn, g) {
+  // ลบคลาส on จากปุ่มทั้งหมด
+  document.querySelectorAll('.kp-tab').forEach(b => b.classList.remove('on'));
+  // เพิ่มคลาส on ให้ปุ่มที่กด
+  btn.classList.add('on');
+
+  // ซ่อนรายการเพลงทั้งหมด แล้วแสดงเฉพาะหมวดที่เลือก
+  document.querySelectorAll('.kp-sl').forEach(l => {
+    l.classList.toggle('on', l.dataset.g === g);
+  });
+}
+
+// ========== ฟังก์ชันจัดการเวลา ==========
+
+/**
+ * แปลงวินาทีเป็นรูปแบบ m:ss
+ * @param {number} s - วินาที
+ * @returns {string} เวลาในรูปแบบ "m:ss"
+ */
+function fmt(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60).toString().padStart(2, '0');
+  return `${m}:${sec}`;
+}
+
+// ========== ฟังก์ชันโน้ตดนตรีลอยขึ้น ==========
+
+/**
+ * สร้างโน้ตดนตรี ♪ ลอยขึ้นจากตำแหน่งที่กด
+ * @param {HTMLElement} el - ไอคอนที่ถูกกด
+ */
+function note(el) {
+  const r = el.getBoundingClientRect();
+  const n = document.createElement('span');
+  n.className = 'kp-note';
+  n.textContent = '♪';
+  n.style.left = (r.left + 10) + 'px';
+  n.style.top = r.top + 'px';
+  document.body.appendChild(n);
+  setTimeout(() => n.remove(), 1200); // ลบทิ้งหลัง animation จบ
+}
+
+// ========== ฟังก์ชันเล่น/หยุดเพลง ==========
+
+/**
+ * จัดการการเล่นเพลงเมื่อกดที่รายการ
+ * @param {HTMLElement} el - รายการเพลงที่ถูกกด
+ * @param {string} title - ชื่อเพลง
+ * @param {string} artist - ชื่อศิลปิน
+ */
+function play(el, title, artist) {
+  // เอฟเฟกต์โน้ตดนตรีลอยขึ้น
+  note(el.querySelector('.kp-ic'));
+
+  // ถ้ากดเพลงเดิมที่กำลังเล่นอยู่ -> หยุดเล่น
+  if (cur === el && playing) {
+    stop();
+    return;
+  }
+
+  // รีเซ็ตสถานะเพลงเก่า
+  document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
+
+  // ตั้งค่าเพลงใหม่
+  cur = el;
+  el.classList.add('play');
+  playing = true;
+  prog = 0;
+
+  // อัปเดตชื่อเพลงที่กำลังเล่น
+  document.getElementById('np').textContent = '🎵 ' + title + ' — ' + artist;
+  document.getElementById('dt').textContent = fmt(dur);
+
+  // เริ่มจำลองการเล่นเพลง (progress bar วิ่ง)
+  if (timer) clearInterval(timer);
+  timer = setInterval(() => {
+    prog += 1;
+    if (prog >= dur) {
+      prog = dur;
+      stop();
+    }
+    updateBar();
+  }, 1000);
+}
+
+/**
+ * หยุดเล่นเพลงและรีเซ็ตสถานะ
+ */
+function stop() {
+  playing = false;
+  if (timer) {
+    clearInterval(timer);
+    timer = null;
+  }
+  document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
+  document.getElementById('np').textContent = '🎵 ยังไม่ได้เลือกเพลง';
+  prog = 0;
+  updateBar();
+  cur = null;
+}
+
+/**
+ * อัปเดตแถบ progress bar และเวลา
+ */
+function updateBar() {
+  document.getElementById('ct').textContent = fmt(prog);
+  document.getElementById('fill').style.width = (prog / dur * 100) + '%';
+}
+
+/**
+ * ข้ามไปยังตำแหน่งเวลาที่คลิกบน progress bar
+ * @param {Event} e - event object
+ */
+function seek(e) {
+  const trk = document.getElementById('trk');
+  const rect = trk.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  prog = Math.round(pct * dur);
+  if (prog > dur) prog = dur;
+  updateBar();
+}
