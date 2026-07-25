@@ -11,6 +11,26 @@
 
 <body>
 
+  <!-- ========== FLOATING MINI PLAYER ========== -->
+  <div class="kp-float-player" id="float-player">
+    <div class="kp-float-header">
+      <div class="kp-float-info">
+        <span class="kp-float-np" id="fl-np">🎵 ยังไม่ได้เลือกเพลง</span>
+      </div>
+      <div class="kp-float-actions">
+        <button class="kp-float-btn" id="fl-play" onclick="togglePlay()">⏸</button>
+        <button class="kp-float-btn close" onclick="closeFloatPlayer()">✕</button>
+      </div>
+    </div>
+    <div class="kp-float-pr">
+      <span class="kp-float-tm" id="fl-ct">0:00</span>
+      <div class="kp-float-trk" id="fl-trk" onclick="seekFloat(event)">
+        <div class="kp-float-fill" id="fl-fill"></div>
+      </div>
+      <span class="kp-float-tm" id="fl-dt">3:00</span>
+    </div>
+  </div>
+
   <div class="kp-box">
     <div class="kp-center">
       <h1 class="kp-title">KAWAII</h1>
@@ -391,16 +411,25 @@
     // ตัวแปรหลัก
     let cur = null, playing = false, timer = null, prog = 0, dur = 180;
     let audio = null;
+    let currentTitle = '';
+    let currentArtist = '';
 
     // เปิด/ปิด Modal
     function openM(t) {
       const m = document.getElementById('m-' + t);
       if (m) { m.classList.add('on'); document.body.style.overflow = 'hidden'; }
+      if (t === 'music') {
+        hideFloatPlayer();
+      }
     }
     function closeM(t) {
       const m = document.getElementById('m-' + t);
       if (m) { m.classList.remove('on'); document.body.style.overflow = ''; }
-      if (t === 'music') stop();
+      if (t === 'music') {
+        if (playing) {
+          showFloatPlayer();
+        }
+      }
     }
     function bgClose(e, t) {
       if (e.target === e.currentTarget) closeM(t);
@@ -435,6 +464,64 @@
       setTimeout(() => n.remove(), 1200);
     }
 
+    // ฟังก์ชันควบคุมเครื่องเล่นลอย
+    function showFloatPlayer() {
+      const fl = document.getElementById('float-player');
+      if (fl) {
+        fl.classList.add('active');
+        updateFloatUI();
+      }
+    }
+
+    function hideFloatPlayer() {
+      const fl = document.getElementById('float-player');
+      if (fl) {
+        fl.classList.remove('active');
+      }
+    }
+
+    function closeFloatPlayer() {
+      stop();
+      hideFloatPlayer();
+    }
+
+    function updateFloatUI() {
+      const flNp = document.getElementById('fl-np');
+      const flDt = document.getElementById('fl-dt');
+      const flPlay = document.getElementById('fl-play');
+      if (flNp) flNp.textContent = '🎵 ' + currentTitle + ' — ' + (currentArtist || 'ไม่ระบุ');
+      if (flDt) flDt.textContent = fmt(dur);
+      if (flPlay) flPlay.textContent = playing ? '⏸' : '▶';
+    }
+
+    function togglePlay() {
+      const flPlay = document.getElementById('fl-play');
+      if (playing) {
+        if (audio) {
+          audio.pause();
+        } else {
+          if (timer) clearInterval(timer);
+        }
+        playing = false;
+        if (flPlay) flPlay.textContent = '▶';
+        document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
+      } else {
+        if (audio) {
+          audio.play().catch(e => console.log("Audio play failed:", e));
+        } else {
+          if (timer) clearInterval(timer);
+          timer = setInterval(function () {
+            prog += 1;
+            if (prog >= dur) { prog = dur; stop(); }
+            updateBar();
+          }, 1000);
+        }
+        playing = true;
+        if (flPlay) flPlay.textContent = '⏸';
+        if (cur) cur.classList.add('play');
+      }
+    }
+
     // เล่น/หยุดเพลง
     function play(el, title, artist, src) {
       note(el.querySelector('.kp-ic'));
@@ -451,6 +538,8 @@
 
       document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
       cur = el; el.classList.add('play'); playing = true; prog = 0;
+      currentTitle = title;
+      currentArtist = artist;
       document.getElementById('np').textContent = '🎵 ' + title + ' — ' + (artist || 'ไม่ระบุ');
 
       if (src) {
@@ -460,6 +549,7 @@
         audio.addEventListener('loadedmetadata', () => {
           dur = Math.floor(audio.duration);
           document.getElementById('dt').textContent = fmt(dur);
+          updateFloatUI();
         });
 
         audio.addEventListener('timeupdate', () => {
@@ -469,10 +559,12 @@
 
         audio.addEventListener('ended', () => {
           stop();
+          hideFloatPlayer();
         });
       } else {
         dur = 180;
         document.getElementById('dt').textContent = fmt(dur);
+        updateFloatUI();
         timer = setInterval(function () {
           prog += 1;
           if (prog >= dur) { prog = dur; stop(); }
@@ -490,16 +582,42 @@
       }
       document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
       document.getElementById('np').textContent = '🎵 ยังไม่ได้เลือกเพลง';
+      const flNp = document.getElementById('fl-np');
+      if (flNp) flNp.textContent = '🎵 ยังไม่ได้เลือกเพลง';
       prog = 0; updateBar(); cur = null;
+      hideFloatPlayer();
     }
 
     function updateBar() {
-      document.getElementById('ct').textContent = fmt(prog);
-      document.getElementById('fill').style.width = (prog / dur * 100) + '%';
+      // แถบใน Modal
+      const ct = document.getElementById('ct');
+      const fill = document.getElementById('fill');
+      if (ct) ct.textContent = fmt(prog);
+      if (fill) fill.style.width = (prog / dur * 100) + '%';
+
+      // แถบเครื่องเล่นลอย
+      const flCt = document.getElementById('fl-ct');
+      const flFill = document.getElementById('fl-fill');
+      if (flCt) flCt.textContent = fmt(prog);
+      if (flFill) flFill.style.width = (prog / dur * 100) + '%';
     }
 
     function seek(e) {
       const trk = document.getElementById('trk');
+      const rect = trk.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      const targetTime = pct * dur;
+      if (audio) {
+        audio.currentTime = targetTime;
+      } else {
+        prog = Math.round(targetTime);
+        if (prog > dur) prog = dur;
+        updateBar();
+      }
+    }
+
+    function seekFloat(e) {
+      const trk = document.getElementById('fl-trk');
       const rect = trk.getBoundingClientRect();
       const pct = (e.clientX - rect.left) / rect.width;
       const targetTime = pct * dur;

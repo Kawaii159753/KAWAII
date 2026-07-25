@@ -566,3 +566,119 @@ body {
   .kp-cl { top: 130px; left: 20px; }
   .kp-grid2 { grid-template-columns: 1fr; }
 }
+
+/* ================================================================
+   🎼 FLOATING MINI PLAYER - เครื่องเล่นเพลงลอยมุมขวาบน
+   ================================================================ */
+.kp-float-player {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 320px;
+  padding: 14px 18px;
+  border-radius: 20px;
+  background: var(--kp-glass);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1.5px solid var(--kp-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform: translateY(-20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kp-float-player.active {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.kp-float-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kp-float-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.kp-float-np {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--kp-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kp-float-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kp-float-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--kp-text);
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.kp-float-btn:hover {
+  background: var(--kp-pink2);
+  color: white;
+}
+
+.kp-float-btn.close:hover {
+  background: rgba(255, 96, 124, 0.15);
+  color: var(--kp-pink3);
+}
+
+.kp-float-pr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kp-float-tm {
+  font-size: 0.65rem;
+  color: var(--kp-muted);
+  font-weight: 600;
+  min-width: 30px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.kp-float-trk {
+  flex: 1;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+}
+
+.kp-float-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--kp-pink), var(--kp-pink2));
+  border-radius: 999px;
+  transition: width 0.1s linear;
+}
