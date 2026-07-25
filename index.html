@@ -473,14 +473,48 @@
       return m + ':' + sec;
     }
 
-    // โน้ตดนตรีลอยขึ้น
-    function note(el) {
+    // โน้ตดนตรีลอยขึ้นแบบต่อเนื่อง
+    let noteInterval = null;
+
+    function startNoteFlow() {
+      if (noteInterval) clearInterval(noteInterval);
+      noteInterval = setInterval(() => {
+        if (!playing) {
+          clearInterval(noteInterval);
+          noteInterval = null;
+          return;
+        }
+        
+        let targetEl = null;
+        const fl = document.getElementById('float-player');
+        
+        if (fl && fl.classList.contains('active')) {
+          targetEl = document.getElementById('fl-np');
+        } else if (cur) {
+          targetEl = cur.querySelector('.kp-ic');
+        }
+        
+        if (targetEl) {
+          spawnNote(targetEl);
+        }
+      }, 700);
+    }
+
+    function spawnNote(el) {
+      if (!el) return;
       const r = el.getBoundingClientRect();
       const n = document.createElement('span');
       n.className = 'kp-note';
-      n.textContent = '♪';
-      n.style.left = (r.left + 10) + 'px';
+      const notes = ['♪', '♫', '♩', '♬'];
+      n.textContent = notes[Math.floor(Math.random() * notes.length)];
+      
+      const offsetX = (Math.random() - 0.5) * 24;
+      n.style.left = (r.left + r.width / 2 + offsetX) + 'px';
       n.style.top = r.top + 'px';
+      
+      const size = 0.8 + Math.random() * 0.5;
+      n.style.fontSize = size + 'rem';
+      
       document.body.appendChild(n);
       setTimeout(() => n.remove(), 1200);
     }
@@ -524,6 +558,7 @@
           if (timer) clearInterval(timer);
         }
         playing = false;
+        if (noteInterval) { clearInterval(noteInterval); noteInterval = null; }
         if (flPlay) flPlay.textContent = '▶';
         document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
       } else {
@@ -538,6 +573,7 @@
           }, 1000);
         }
         playing = true;
+        startNoteFlow();
         if (flPlay) flPlay.textContent = '⏸';
         if (cur) cur.classList.add('play');
       }
@@ -545,7 +581,7 @@
 
     // เล่น/หยุดเพลง
     function play(el, title, artist, src) {
-      note(el.querySelector('.kp-ic'));
+      spawnNote(el.querySelector('.kp-ic'));
       if (cur === el && playing) { stop(); return; }
 
       if (audio) {
@@ -562,6 +598,7 @@
       currentTitle = title;
       currentArtist = artist;
       document.getElementById('np').textContent = '🎵 ' + title + ' — ' + (artist || 'ไม่ระบุ');
+      startNoteFlow();
 
       if (src) {
         audio = new Audio(src);
@@ -601,6 +638,7 @@
         audio.pause();
         audio = null;
       }
+      if (noteInterval) { clearInterval(noteInterval); noteInterval = null; }
       document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
       document.getElementById('np').textContent = '🎵 ยังไม่ได้เลือกเพลง';
       const flNp = document.getElementById('fl-np');
