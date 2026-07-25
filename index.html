@@ -97,7 +97,7 @@
         <li class="kp-si" onclick="play(this,'Ditto','NewJeans')"><span class="kp-ic">▶</span><div class="kp-info"><p class="kp-st">Ditto</p><p class="kp-sa">NewJeans</p></div></li>
       </ul>
       <ul class="kp-sl" data-g="eng">
-        <li class="kp-si" onclick="play(this,'She Him I Thought I Saw Your Face Today Official Lyric Video.mp3')"><span class="kp-ic">▶</span><div class="kp-info"><p class="kp-st">Thought I Saw Your Face Today</p><p class="kp-sa">Taylor Swift</p></div></li>
+        <li class="kp-si" onclick="play(this,'Thought I Saw Your Face Today','She & Him','She Him I Thought I Saw Your Face Today Official Lyric Video.mp3')"><span class="kp-ic">▶</span><div class="kp-info"><p class="kp-st">Thought I Saw Your Face Today</p><p class="kp-sa">She & Him</p></div></li>
         <li class="kp-si" onclick="play(this,'As It Was','Harry Styles')"><span class="kp-ic">▶</span><div class="kp-info"><p class="kp-st">As It Was</p><p class="kp-sa">Harry Styles</p></div></li>
       </ul>
       <div class="kp-bar">
@@ -180,6 +180,7 @@
   <script>
     // ตัวแปรหลัก
     let cur = null, playing = false, timer = null, prog = 0, dur = 180;
+    let audio = null;
 
     // เปิด/ปิด Modal
     function openM(t) {
@@ -225,24 +226,58 @@
     }
 
     // เล่น/หยุดเพลง
-    function play(el, title, artist) {
+    function play(el, title, artist, src) {
       note(el.querySelector('.kp-ic'));
       if (cur === el && playing) { stop(); return; }
+      
+      if (audio) {
+        audio.pause();
+        audio = null;
+      }
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+
       document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
       cur = el; el.classList.add('play'); playing = true; prog = 0;
-      document.getElementById('np').textContent = '🎵 ' + title + ' — ' + artist;
-      document.getElementById('dt').textContent = fmt(dur);
-      if (timer) clearInterval(timer);
-      timer = setInterval(function() {
-        prog += 1;
-        if (prog >= dur) { prog = dur; stop(); }
-        updateBar();
-      }, 1000);
+      document.getElementById('np').textContent = '🎵 ' + title + ' — ' + (artist || 'ไม่ระบุ');
+      
+      if (src) {
+        audio = new Audio(src);
+        audio.play().catch(e => console.log("Audio play failed:", e));
+        
+        audio.addEventListener('loadedmetadata', () => {
+          dur = Math.floor(audio.duration);
+          document.getElementById('dt').textContent = fmt(dur);
+        });
+
+        audio.addEventListener('timeupdate', () => {
+          prog = Math.floor(audio.currentTime);
+          updateBar();
+        });
+
+        audio.addEventListener('ended', () => {
+          stop();
+        });
+      } else {
+        dur = 180;
+        document.getElementById('dt').textContent = fmt(dur);
+        timer = setInterval(function() {
+          prog += 1;
+          if (prog >= dur) { prog = dur; stop(); }
+          updateBar();
+        }, 1000);
+      }
     }
 
     function stop() {
       playing = false;
       if (timer) { clearInterval(timer); timer = null; }
+      if (audio) {
+        audio.pause();
+        audio = null;
+      }
       document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
       document.getElementById('np').textContent = '🎵 ยังไม่ได้เลือกเพลง';
       prog = 0; updateBar(); cur = null;
@@ -257,9 +292,14 @@
       const trk = document.getElementById('trk');
       const rect = trk.getBoundingClientRect();
       const pct = (e.clientX - rect.left) / rect.width;
-      prog = Math.round(pct * dur);
-      if (prog > dur) prog = dur;
-      updateBar();
+      const targetTime = pct * dur;
+      if (audio) {
+        audio.currentTime = targetTime;
+      } else {
+        prog = Math.round(targetTime);
+        if (prog > dur) prog = dur;
+        updateBar();
+      }
     }
   </script>
 
