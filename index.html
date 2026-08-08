@@ -5,39 +5,1238 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kawaii Portfolio</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --kp-cream: #f7f5ed;
+      --kp-grid: #e5e2d8;
+      --kp-pink: #ffb7c5;
+      --kp-pink2: #ff8fab;
+      --kp-pink3: #e0607c;
+      --kp-text: #444;
+      --kp-muted: #888;
+      --kp-glass: rgba(255, 255, 255, 0.55);
+      --kp-border: rgba(255, 255, 255, 0.6);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--kp-cream);
+      background-image: linear-gradient(var(--kp-grid) 1px, transparent 1px), linear-gradient(90deg, var(--kp-grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .kp-box {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      height: 600px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .kp-center {
+      text-align: center;
+      z-index: 10;
+      animation: titleFloat 4s ease-in-out infinite;
+    }
+
+    .kp-title {
+      font-size: 4rem;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: #ff6b9d;
+      border: 2.5px dashed #ffc4d6;
+      padding: 16px 56px;
+      border-radius: 24px;
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      display: inline-block;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kp-title::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    .kp-sub {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--kp-muted);
+      letter-spacing: 1px;
+    }
+
+    .kp-card {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 18px 14px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 20;
+      min-width: 100px;
+    }
+
+    .kp-card:hover {
+      transform: scale(1.15) !important;
+      background: #ffffff;
+      box-shadow: 0 12px 32px rgba(255, 183, 197, 0.25);
+    }
+
+    .kp-card svg {
+      width: 48px;
+      height: 48px;
+      transition: transform 0.3s;
+    }
+
+    .kp-card:hover svg {
+      transform: translateY(-4px);
+    }
+
+    .kp-card span {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #555;
+      transition: color 0.3s;
+    }
+
+    .kp-card:hover span {
+      color: var(--kp-pink3);
+    }
+
+    .kp-hp svg {
+      color: #ec4899;
+    }
+
+    .kp-cl svg {
+      color: #9333ea;
+    }
+
+    .kp-cf svg {
+      color: #b45309;
+    }
+
+    .kp-bk svg {
+      color: #16a34a;
+    }
+
+    .kp-lp svg {
+      color: #2563eb;
+    }
+
+    .kp-lg svg {
+      color: #ea580c;
+    }
+
+    .kp-hp {
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .kp-cl {
+      top: 150px;
+      left: 90px;
+    }
+
+    .kp-cf {
+      top: 150px;
+      right: 90px;
+    }
+
+    .kp-bk {
+      bottom: 150px;
+      left: 90px;
+    }
+
+    .kp-lp {
+      bottom: 150px;
+      right: 90px;
+    }
+
+    .kp-lg {
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .kp-ov {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .kp-ov.on {
+      display: flex;
+      opacity: 1;
+    }
+
+    .kp-md {
+      width: 420px;
+      max-width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 28px;
+      border-radius: 24px;
+      background: var(--kp-glass);
+      backdrop-filter: blur(24px) saturate(180%);
+      border: 1.5px solid var(--kp-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transform: scale(0.85) translateY(20px);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .kp-ov.on .kp-md {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+
+    .kp-hd {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .kp-hd h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--kp-text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kp-x {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--kp-text);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .kp-x:hover {
+      background: rgba(255, 96, 124, 0.15);
+      color: var(--kp-pink3);
+      transform: rotate(90deg);
+    }
+
+    .kp-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+      scrollbar-width: none;
+    }
+
+    .kp-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .kp-tab {
+      flex-shrink: 0;
+      border: 1.5px solid var(--kp-border);
+      background: rgba(255, 255, 255, 0.4);
+      color: var(--kp-muted);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+
+    .kp-tab:hover {
+      background: rgba(255, 183, 197, 0.2);
+      border-color: var(--kp-pink);
+    }
+
+    .kp-tab.on {
+      background: linear-gradient(135deg, var(--kp-pink), var(--kp-pink2));
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 4px 16px rgba(255, 143, 171, 0.4);
+    }
+
+    .kp-sl {
+      list-style: none;
+      margin-bottom: 20px;
+      display: none;
+      animation: fadeSlideUp 0.3s;
+    }
+
+    .kp-sl.on {
+      display: block;
+    }
+
+    .kp-si {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-bottom: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kp-si::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--kp-pink);
+      transform: scaleY(0);
+      transition: transform 0.25s;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .kp-si:hover {
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .kp-si:hover::before {
+      transform: scaleY(1);
+    }
+
+    .kp-si.play {
+      background: linear-gradient(90deg, rgba(255, 183, 197, 0.25), rgba(255, 255, 255, 0.5));
+    }
+
+    .kp-si.play::before {
+      transform: scaleY(1);
+    }
+
+    .kp-ic {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--kp-pink), var(--kp-pink2));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(255, 143, 171, 0.3);
+      transition: all 0.25s;
+    }
+
+    .kp-si:hover .kp-ic {
+      transform: scale(1.1);
+      box-shadow: 0 5px 16px rgba(255, 143, 171, 0.5);
+    }
+
+    .kp-si.play .kp-ic {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .kp-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .kp-st {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--kp-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .kp-sa {
+      font-size: 0.78rem;
+      color: var(--kp-muted);
+      margin-top: 2px;
+    }
+
+    .kp-bar {
+      margin-top: 8px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1.5px solid var(--kp-border);
+    }
+
+    .kp-np {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--kp-text);
+      margin-bottom: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kp-pr {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .kp-tm {
+      font-size: 0.7rem;
+      color: var(--kp-muted);
+      font-weight: 600;
+      min-width: 36px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kp-trk {
+      flex: 1;
+      height: 5px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 999px;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .kp-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--kp-pink), var(--kp-pink2));
+      border-radius: 999px;
+      transition: width 0.1s linear;
+      position: relative;
+    }
+
+    .kp-fill::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      background: white;
+      border: 2.5px solid var(--kp-pink2);
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(255, 143, 171, 0.4);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .kp-trk:hover .kp-fill::after {
+      opacity: 1;
+    }
+
+    .kp-grid2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .kp-it {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1.5px solid var(--kp-border);
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .kp-it:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      border-color: var(--kp-pink);
+    }
+
+    .kp-it svg {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 8px;
+    }
+
+    .kp-it-t {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--kp-text);
+    }
+
+    .kp-it-d {
+      font-size: 0.75rem;
+      color: var(--kp-muted);
+      margin-top: 4px;
+    }
+
+    /* Preview Styles - Coffee, Fashion, Books */
+    .cf-preview,
+    .fs-preview,
+    .bk-preview {
+      width: 100%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 0;
+      background: rgba(255, 255, 255, 0.35);
+      transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .cf-preview.active,
+    .fs-preview.active,
+    .bk-preview.active {
+      height: 220px;
+      margin-bottom: 20px;
+    }
+
+    .cf-preview img,
+    .fs-preview img,
+    .bk-preview img {
+      max-height: 200px;
+      max-width: 90%;
+      object-fit: contain;
+      opacity: 0;
+      transform: scale(0.85) translateY(16px);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .cf-preview.active img.show,
+    .fs-preview.active img.show,
+    .bk-preview.active img.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .kp-it.selected {
+      background: rgba(255, 183, 197, 0.3);
+      border-color: var(--kp-pink);
+      box-shadow: 0 4px 20px rgba(255, 143, 171, 0.25);
+    }
+
+    .kp-it.selected .kp-it-t {
+      color: var(--kp-pink3);
+    }
+
+    /* Travel */
+    .kp-travel-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 8px;
+      padding: 0 4px;
+    }
+
+    .kp-travel-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 16px;
+      border: 2px solid rgba(255, 183, 197, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      padding: 22px 20px;
+      text-align: center;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
+
+    .kp-travel-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--kp-pink);
+      box-shadow: 0 12px 32px rgba(255, 183, 197, 0.2);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .kp-travel-body {
+      text-align: center;
+    }
+
+    .kp-travel-place {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--kp-text);
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    .kp-travel-flag {
+      font-size: 1.1rem;
+      margin-left: 4px;
+    }
+
+    .kp-travel-why {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--kp-pink3);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .kp-travel-desc {
+      font-size: 0.85rem;
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 14px;
+      text-align: center;
+      padding: 0 8px;
+    }
+
+    .kp-travel-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .kp-travel-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(255, 183, 197, 0.25);
+      color: var(--kp-pink3);
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255, 183, 197, 0.3);
+    }
+
+    .kp-travel-btn {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 6px 18px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255, 183, 197, 0.5);
+      background: rgba(255, 183, 197, 0.25);
+      color: #e0607c;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      -webkit-text-fill-color: #e0607c;
+    }
+
+    .mini-player {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 280px;
+      padding: 12px 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 9999;
+      transform: translateY(-120%);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .mini-player.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .mini-cover {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--kp-pink), var(--kp-pink2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(255, 143, 171, 0.4);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .mini-info {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .mini-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--kp-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini-artist {
+      font-size: 0.72rem;
+      color: var(--kp-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini-progress {
+      width: 100%;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 999px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .mini-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--kp-pink), var(--kp-pink2));
+      border-radius: 999px;
+      transition: width 0.3s linear;
+    }
+
+    .mini-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .mini-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 183, 197, 0.35);
+      color: var(--kp-pink3);
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+
+    .mini-btn:hover {
+      background: var(--kp-pink);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .mini-close {
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--kp-muted);
+      font-size: 0.75rem;
+    }
+
+    .mini-close:hover {
+      background: rgba(255, 96, 124, 0.2);
+      color: var(--kp-pink3);
+    }
+
+    .kp-note {
+      position: fixed;
+      pointer-events: none;
+      z-index: 2000;
+      animation: noteFloatUp 1.5s ease-out forwards;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(255, 183, 197, 0.5);
+    }
+
+    @keyframes titleFloat {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-8px)
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        left: -100%
+      }
+
+      100% {
+        left: 200%
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1)
+      }
+
+      50% {
+        transform: scale(1.08)
+      }
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes noteFloatUp {
+      0% {
+        transform: translate(0, 0) scale(0.6) rotate(-10deg);
+        opacity: 0
+      }
+
+      15% {
+        opacity: 1;
+        transform: translate(5px, -10px) scale(1) rotate(0deg)
+      }
+
+      100% {
+        transform: translate(30px, -120px) scale(0.8) rotate(15deg);
+        opacity: 0
+      }
+    }
+
+    @media (max-width:640px) {
+      .kp-box {
+        height: 520px
+      }
+
+      .kp-title {
+        font-size: 2.4rem;
+        padding: 12px 32px;
+        letter-spacing: 3px
+      }
+
+      .kp-card {
+        padding: 14px 10px;
+        min-width: 80px;
+        border-radius: 14px
+      }
+
+      .kp-card svg {
+        width: 40px;
+        height: 40px
+      }
+
+      .kp-card span {
+        font-size: 0.72rem
+      }
+
+      .kp-md {
+        width: 100%;
+        padding: 20px
+      }
+
+      .kp-hp {
+        top: 20px
+      }
+
+      .kp-lg {
+        bottom: 20px
+      }
+
+      .kp-cl {
+        top: 120px;
+        left: 30px
+      }
+
+      .kp-cf {
+        top: 120px;
+        right: 30px
+      }
+
+      .kp-bk {
+        bottom: 120px;
+        left: 30px
+      }
+
+      .kp-lp {
+        bottom: 120px;
+        right: 30px
+      }
+
+      .kp-grid2 {
+        grid-template-columns: 1fr
+      }
+
+      .mini-player {
+        width: calc(100% - 40px);
+        left: 20px;
+        right: 20px;
+        top: 10px
+      }
+
+      .kp-travel-card {
+        padding: 18px 16px
+      }
+
+      .kp-travel-place {
+        font-size: 1rem
+      }
+
+      .kp-travel-desc {
+        font-size: 0.82rem;
+        line-height: 1.6;
+        padding: 0
+      }
+
+      .kp-travel-tag {
+        font-size: 0.65rem;
+        padding: 4px 12px
+      }
+
+      .kp-travel-btn {
+        font-size: 0.72rem;
+        padding: 5px 16px
+      }
+    }
+
+    /* ========== Polaroid Stack ========== */
+    .polaroid-stack {
+      position: fixed;
+      bottom: -40px;
+      left: -30px;
+      z-index: 30;
+      display: flex;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+
+    .polaroid-stack>* {
+      pointer-events: auto;
+    }
+
+    .polaroid-small {
+      width: 130px;
+      background: #fafafa;
+      padding: 10px 10px 36px 10px;
+      border-radius: 2px;
+      box-shadow:
+        2px 4px 12px rgba(0, 0, 0, 0.15),
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.03);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .polaroid-small:nth-child(1) {
+      transform: rotate(-22deg) translate(18px, 8px);
+      z-index: 1;
+      margin-right: -55px;
+    }
+
+    .polaroid-small:nth-child(2) {
+      transform: rotate(16deg) translate(-8px, -18px);
+      z-index: 2;
+      margin-right: -60px;
+    }
+
+    .polaroid-small:nth-child(3) {
+      transform: rotate(-10deg) translate(22px, 6px);
+      z-index: 3;
+    }
+
+    .polaroid-small:hover {
+      transform: rotate(0deg) translateY(-32px) scale(1.12);
+      z-index: 10;
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.2),
+        0 6px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .polaroid-small img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 2px;
+      display: block;
+      background: #e0e0e0;
+      filter: contrast(1.05) saturate(0.92);
+    }
+
+    .polaroid-small .pcap {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #aaa;
+      font-family: "Comic Sans MS", "Chalkboard SE", cursive, sans-serif;
+      letter-spacing: 0.5px;
+      transform: rotate(-1deg);
+    }
+
+    /* Polaroid Overlay */
+    .polaroid-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .polaroid-overlay.on {
+      display: flex;
+      opacity: 1;
+    }
+
+    .polaroid-large-wrap {
+      position: relative;
+      transform: scale(0.7) translateY(30px);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .polaroid-overlay.on .polaroid-large-wrap {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+
+    .polaroid-large-stack {
+      position: relative;
+      width: 400px;
+      max-width: 85vw;
+      height: 460px;
+    }
+
+    .polaroid-large-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fafafa;
+      padding: 20px 20px 60px 20px;
+      border-radius: 4px;
+      box-shadow:
+        0 28px 70px rgba(0, 0, 0, 0.28),
+        0 10px 24px rgba(0, 0, 0, 0.18);
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-origin: center bottom;
+    }
+
+    .polaroid-large-card img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      border-radius: 3px;
+      display: block;
+      background: #e0e0e0;
+      filter: contrast(1.05) saturate(0.92);
+      pointer-events: none;
+    }
+
+    .polaroid-large-card .pcap {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #666;
+      font-family: "Comic Sans MS", "Chalkboard SE", cursive, sans-serif;
+      letter-spacing: 1px;
+      transform: rotate(-1deg);
+      pointer-events: none;
+    }
+
+    /* Stack positions: 0=front, 1=middle, 2=back */
+    .polaroid-large-card.pos-0 {
+      z-index: 3;
+      transform: rotate(-2deg) translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .polaroid-large-card.pos-1 {
+      z-index: 2;
+      transform: rotate(4deg) translateY(15px) scale(0.95);
+      opacity: 0.85;
+    }
+
+    .polaroid-large-card.pos-2 {
+      z-index: 1;
+      transform: rotate(-5deg) translateY(30px) scale(0.9);
+      opacity: 0.7;
+    }
+
+    .polaroid-large-card:hover {
+      filter: brightness(1.02);
+    }
+
+    .polaroid-close {
+      position: absolute;
+      top: -18px;
+      right: -18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: #ffffff;
+      color: var(--kp-pink3);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      transition: all 0.2s;
+      z-index: 10;
+    }
+
+    .polaroid-close:hover {
+      transform: scale(1.1) rotate(90deg);
+      background: var(--kp-pink);
+      color: white;
+    }
+
+    @media (max-width: 640px) {
+      .polaroid-stack {
+        bottom: -30px;
+        left: -20px;
+      }
+
+      .polaroid-small {
+        width: 90px;
+        padding: 6px 6px 26px 6px;
+      }
+
+      .polaroid-small img {
+        height: 68px;
+      }
+
+      .polaroid-small .pcap {
+        font-size: 0.58rem;
+        bottom: 7px;
+      }
+
+      .polaroid-small:nth-child(1) {
+        margin-right: -38px;
+        transform: rotate(-22deg) translate(12px, 5px);
+      }
+
+      .polaroid-small:nth-child(2) {
+        margin-right: -42px;
+        transform: rotate(16deg) translate(-5px, -12px);
+      }
+
+      .polaroid-small:nth-child(3) {
+        transform: rotate(-10deg) translate(14px, 4px);
+      }
+
+      .polaroid-large-stack {
+        width: 300px;
+        height: 340px;
+      }
+
+      .polaroid-large-card {
+        padding: 14px 14px 48px 14px;
+      }
+
+      .polaroid-large-card img {
+        height: 260px;
+      }
+
+      .polaroid-large-card .pcap {
+        font-size: 0.9rem;
+        bottom: 16px;
+      }
+
+      .polaroid-large-card.pos-0 {
+        transform: rotate(-2deg) translateY(0) scale(1);
+      }
+
+      .polaroid-large-card.pos-1 {
+        transform: rotate(4deg) translateY(10px) scale(0.95);
+      }
+
+      .polaroid-large-card.pos-2 {
+        transform: rotate(-5deg) translateY(20px) scale(0.9);
+      }
+    }
+  </style>
+  <base target="_blank">
+  <base target="_blank">
   <base target="_blank">
 </head>
 
 <body>
 
-  <!-- ========== FLOATING MINI PLAYER ========== -->
-  <div class="kp-float-player" id="float-player">
-    <div class="kp-float-header">
-      <div class="kp-float-info">
-        <span class="kp-float-np" id="fl-np">🎵 ยังไม่ได้เลือกเพลง</span>
-      </div>
-      <div class="kp-float-actions">
-        <button class="kp-float-btn" id="fl-play" onclick="togglePlay()">⏸</button>
-        <button class="kp-float-btn close" onclick="closeFloatPlayer()">✕</button>
-      </div>
-    </div>
-    <div class="kp-float-pr">
-      <span class="kp-float-tm" id="fl-ct">0:00</span>
-      <div class="kp-float-trk" id="fl-trk" onclick="seekFloat(event)">
-        <div class="kp-float-fill" id="fl-fill"></div>
-      </div>
-      <span class="kp-float-tm" id="fl-dt">3:00</span>
-    </div>
-  </div>
-
   <div class="kp-box">
     <div class="kp-center">
       <h1 class="kp-title">KAWAII</h1>
-      <p class="kp-sub">my favorite things ✨</p>
+      <p class="kp-sub">my Lifestyle ✨</p>
     </div>
 
-    <div class="kp-card kp-hp" onclick="openM('music')" style="--r:-5deg">
+    <div class="kp-card kp-hp" onclick="openM('music')">
       <svg viewBox="0 0 24 24" fill="none" stroke="#e0607c" stroke-width="1.8" stroke-linecap="round">
         <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
         <path
@@ -46,7 +1245,7 @@
       <span>หูฟัง</span>
     </div>
 
-    <div class="kp-card kp-cf" onclick="openM('coffee')" style="--r:8deg">
+    <div class="kp-card kp-cf" onclick="openM('coffee')">
       <svg viewBox="0 0 24 24" fill="none" stroke="#8B6914" stroke-width="1.8" stroke-linecap="round">
         <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
         <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
@@ -57,7 +1256,7 @@
       <span>กาแฟ</span>
     </div>
 
-    <div class="kp-card kp-lp" onclick="openM('tech')" style="--r:5deg">
+    <div class="kp-card kp-lp" onclick="openM('tech')">
       <svg viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="1.8" stroke-linecap="round">
         <rect x="2" y="3" width="20" height="14" rx="2" />
         <line x1="2" y1="20" x2="22" y2="20" />
@@ -66,7 +1265,7 @@
       <span>คอมพิวเตอร์</span>
     </div>
 
-    <div class="kp-card kp-bk" onclick="openM('books')" style="--r:-8deg">
+    <div class="kp-card kp-bk" onclick="openM('books')">
       <svg viewBox="0 0 24 24" fill="none" stroke="#2E8B57" stroke-width="1.8" stroke-linecap="round">
         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
@@ -74,7 +1273,7 @@
       <span>หนังสือ</span>
     </div>
 
-    <div class="kp-card kp-cl" onclick="openM('fashion')" style="--r:-6deg">
+    <div class="kp-card kp-cl" onclick="openM('fashion')">
       <svg viewBox="0 0 24 24" fill="none" stroke="#9B59B6" stroke-width="1.8" stroke-linecap="round">
         <path
           d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
@@ -82,7 +1281,7 @@
       <span>เสื้อผ้า</span>
     </div>
 
-    <div class="kp-card kp-lg" onclick="openM('travel')" style="--r:-3deg">
+    <div class="kp-card kp-lg" onclick="openM('travel')">
       <svg viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.8" stroke-linecap="round">
         <rect x="6" y="3" width="12" height="18" rx="2" />
         <line x1="12" y1="8" x2="12" y2="8" />
@@ -94,7 +1293,45 @@
     </div>
   </div>
 
-  <!-- ========== MODAL: เพลง ========== -->
+
+  <!-- Polaroid Stack -->
+  <div class="polaroid-stack">
+    <div class="polaroid-small" onclick="openPolaroid(0)">
+      <img src="ชมพู.jpg" alt="polaroid 1" onerror="this.style.background='#f0f0f0'">
+      <div class="pcap">Memories ✨</div>
+    </div>
+    <div class="polaroid-small" onclick="openPolaroid(1)">
+      <img src="เเว่น.jpg" alt="polaroid 2" onerror="this.style.background='#f0f0f0'">
+      <div class="pcap">Good Times 🌸</div>
+    </div>
+    <div class="polaroid-small" onclick="openPolaroid(2)">
+      <img src="หัวทอง.jpg" alt="polaroid 3" onerror="this.style.background='#f0f0f0'">
+      <div class="pcap">Best Day 🎀</div>
+    </div>
+  </div>
+
+  <!-- Polaroid Large Overlay -->
+  <div class="polaroid-overlay" id="polaroidOverlay" onclick="bgClosePolaroid(event)">
+    <div class="polaroid-large-wrap">
+      <button class="polaroid-close" onclick="closePolaroid()">✕</button>
+      <div class="polaroid-large-stack" id="polaroidLargeStack">
+        <div class="polaroid-large-card pos-0" data-idx="0" onclick="cyclePolaroid(0)">
+          <img src="ชมพู.jpg" alt="polaroid 1">
+          <div class="pcap">Memories ✨</div>
+        </div>
+        <div class="polaroid-large-card pos-1" data-idx="1" onclick="cyclePolaroid(1)">
+          <img src="เเว่น.jpg" alt="polaroid 2">
+          <div class="pcap">Good Times 🌸</div>
+        </div>
+        <div class="polaroid-large-card pos-2" data-idx="2" onclick="cyclePolaroid(2)">
+          <img src="หัวทอง.jpg" alt="polaroid 3">
+          <div class="pcap">Best Day 🎀</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Music -->
   <div class="kp-ov" id="m-music" onclick="bgClose(event,'music')">
     <div class="kp-md">
       <div class="kp-hd">
@@ -105,24 +1342,28 @@
         <button class="kp-tab on" onclick="tab(this,'thai')">🇹🇭 ไทย</button>
         <button class="kp-tab" onclick="tab(this,'jp')">🇯🇵 ญี่ปุ่น</button>
         <button class="kp-tab" onclick="tab(this,'kr')">🇰🇷 เกาหลี</button>
-        <button class="kp-tab" onclick="tab(this,'eng')">🇬🇧 อังกฤษ</button>
+        <button class="kp-tab" onclick="tab(this,'eng')">eng อังกฤษ</button>
       </div>
+
       <ul class="kp-sl on" data-g="thai">
-        <li class="kp-si" onclick="play(this,'เจ็บเมื่อไหร่ (CALL ME)','KRIST','เจ็บเมื่อไหร่ (CALL ME) - KRIST [ OFFICIAL MV ] - RISER MUSIC (youtube).mp3')">
+        <li class="kp-si" data-title="เจ็บเมื่อไหร่ (CALL ME)" data-artist="KRIST"
+          data-src="เจ็บเมื่อไหร่ (CALL ME) - KRIST [ OFFICIAL MV ] - RISER MUSIC (youtube).mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">เจ็บเมื่อไหร่ (CALL ME)</p>
             <p class="kp-sa">KRIST</p>
           </div>
         </li>
-        <li class="kp-si" onclick="play(this,'ลบยัง (Re-move on)','GEMINI, FOURTH','ลบยัง (Re-move on) Ost.My Love Mix-Up! เขียนรักด้วยยางลบ - GEMINI, FOURTH - GMMTV RECORDS (youtube).mp3')">
+        <li class="kp-si" data-title="ลบยัง (Re-move on)" data-artist="GEMINI, FOURTH"
+          data-src="ลบยัง (Re-move on) Ost.My Love Mix-Up! เขียนรักด้วยยางลบ - GEMINI, FOURTH - GMMTV RECORDS (youtube).mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">ลบยัง (Re-move on)</p>
-            <p class="kp-sa">Ost.My Love Mix-Up! เขียนรักด้วยยางลบ - GEMINI, FOURTH</p>
+            <p class="kp-sa">Ost.My Love Mix-Up! - GEMINI, FOURTH</p>
           </div>
         </li>
-        <li class="kp-si" onclick="play(this,'เล่นตัวเล่นใจ','1DEASY','เล่นตัวเล่นใจ (feat. PRADA _ 2ZR4CK) - 1DEASY (youtube).mp3')">
+        <li class="kp-si" data-title="เล่นตัวเล่นใจ" data-artist="1DEASY"
+          data-src="เล่นตัวเล่นใจ (feat. PRADA _ 2ZR4CK) - 1DEASY (youtube).mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">เล่นตัวเล่นใจ</p>
@@ -130,22 +1371,26 @@
           </div>
         </li>
       </ul>
+
       <ul class="kp-sl" data-g="jp">
-        <li class="kp-si" onclick="play(this,'あなたといたい','Ayumu Imazu','Ayumu Imazu - あなたといたい [Music Video] - Ayumu Imazu 今津渉 (youtube).mp3')">
+        <li class="kp-si" data-title="あなたといたい" data-artist="Ayumu Imazu"
+          data-src="Ayumu Imazu - あなたといたい [Music Video] - Ayumu Imazu 今津渉 (youtube).mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">あなたといたい</p>
             <p class="kp-sa">Ayumu Imazu</p>
           </div>
         </li>
-        <li class="kp-si" onclick="play(this,'Garden','Fujii Kaze','Fujii Kaze - Garden (Not a MV) - Fujii Kaze (youtube).mp3')">
+        <li class="kp-si" data-title="Garden" data-artist="Fujii Kaze"
+          data-src="Fujii Kaze - Garden (Not a MV) - Fujii Kaze (youtube).mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">Garden</p>
             <p class="kp-sa">Fujii Kaze</p>
           </div>
         </li>
-        <li class="kp-si" onclick="play(this,'踊り子','Vaundy','【第75回NHK紅白歌合戦 歌唱曲】踊り子 _ Vaundy：MUSIC VIDEO - Vaundy (youtube).mp3')">
+        <li class="kp-si" data-title="踊り子" data-artist="Vaundy"
+          data-src="【第75回NHK紅白歌合戦 歌唱曲】踊り子 _ Vaundy：MUSIC VIDEO - Vaundy (youtube).mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">踊り子</p>
@@ -153,46 +1398,51 @@
           </div>
         </li>
       </ul>
+
       <ul class="kp-sl" data-g="kr">
-        <li class="kp-si" onclick="play(this,'Cherish (My Love)','ILLIT (아일릿)','ILLIT 아일릿 ‘Cherish My Love ’ Official MV.mp3')">
+        <li class="kp-si" data-title="Cherish (My Love)" data-artist="ILLIT"
+          data-src="ILLIT 아일릿 ‘Cherish My Love ’ Official MV.mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">Cherish (My Love)</p>
             <p class="kp-sa">ILLIT (아일릿)</p>
           </div>
         </li>
-        <li class="kp-si" onclick="play(this,'Day 1','Red Velvet','Day 1.mp3')">
+        <li class="kp-si" data-title="Day 1" data-artist="The Red" data-src="Day 1.mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">Day 1</p>
-            <p class="kp-sa">Red Velvet</p>
+            <p class="kp-sa">The Red - The 1st Album</p>
           </div>
         </li>
-        <li class="kp-si" onclick="play(this,'GIVE LOVE','AKMU (Akdong Musician)','V.mp3')">
+        <li class="kp-si" data-title="GIVE LOVE" data-artist="Akdong Musician (AKMU)" data-src="V.mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">GIVE LOVE</p>
-            <p class="kp-sa">AKMU (Akdong Musician)</p>
+            <p class="kp-sa">Akdong Musician (AKMU)</p>
           </div>
         </li>
       </ul>
+
       <ul class="kp-sl" data-g="eng">
-        <li class="kp-si"
-          onclick="play(this,'Thought I Saw Your Face Today','She & Him','She Him I Thought I Saw Your Face Today Official Lyric Video.mp3')">
+        <li class="kp-si" data-title="Thought I Saw Your Face Today" data-artist="She & Him"
+          data-src="She Him I Thought I Saw Your Face Today Official Lyric Video.mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">Thought I Saw Your Face Today</p>
             <p class="kp-sa">She & Him</p>
           </div>
         </li>
-        <li class="kp-si" onclick="play(this,'Manchild','Sabrina Carpenter','Sabrina Carpenter Manchild Official Video.mp3')">
+        <li class="kp-si" data-title="Manchild" data-artist="Sabrina Carpenter"
+          data-src="Sabrina Carpenter Manchild Official Video.mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">Manchild</p>
             <p class="kp-sa">Sabrina Carpenter</p>
           </div>
         </li>
-        <li class="kp-si" onclick="play(this,'Love Me Harder','Ariana Grande, The Weeknd','Ariana Grande The Weeknd Love Me Harder.mp3')">
+        <li class="kp-si" data-title="Love Me Harder" data-artist="Ariana Grande, The Weeknd"
+          data-src="Ariana Grande The Weeknd Love Me Harder.mp3">
           <span class="kp-ic">▶</span>
           <div class="kp-info">
             <p class="kp-st">Love Me Harder</p>
@@ -200,48 +1450,55 @@
           </div>
         </li>
       </ul>
+
       <div class="kp-bar">
         <div class="kp-np" id="np">🎵 ยังไม่ได้เลือกเพลง</div>
         <div class="kp-pr">
           <span class="kp-tm" id="ct">0:00</span>
-          <div class="kp-trk" id="trk" onclick="seek(event)">
+          <div class="kp-trk" id="trk">
             <div class="kp-fill" id="fill"></div>
           </div>
-          <span class="kp-tm" id="dt">3:00</span>
+          <span class="kp-tm" id="dt">0:00</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ========== MODAL: กาแฟ ========== -->
+  <!-- MODAL: Coffee -->
   <div class="kp-ov" id="m-coffee" onclick="bgClose(event,'coffee')">
     <div class="kp-md">
+      <div class="cf-preview" id="cf-preview"><img id="cf-img" src="" alt="coffee"></div>
       <div class="kp-hd">
-        <h3>☕ เครื่องดื่มที่ชอบ</h3><button class="kp-x" onclick="closeM('coffee')">✕</button>
+        <h3>☕ เครื่องดื่มที่ชอบ</h3>
+        <button class="kp-x" onclick="closeM('coffee')">✕</button>
       </div>
       <div class="kp-grid2">
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#8B6914" stroke-width="1.5">
+        <div class="kp-it" onclick="pickCoffee('Latte.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B6914" stroke-width="1.5">
             <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
             <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
           </svg>
           <div class="kp-it-t">Latte</div>
           <div class="kp-it-d">นมเยอะๆ หวานนิดๆ</div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="1.5">
+        <div class="kp-it" onclick="pickCoffee('Americano.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#5D4037" stroke-width="1.5">
             <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
             <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
           </svg>
           <div class="kp-it-t">Americano</div>
           <div class="kp-it-d">เข้มข้น ตื่นเต็มตา</div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.5">
+        <div class="kp-it" onclick="pickCoffee('Caramel Macchiato.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.5">
             <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
             <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
           </svg>
           <div class="kp-it-t">Caramel Macchiato</div>
           <div class="kp-it-d">หวานมัน ละมุนละไม</div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="1.5">
+        <div class="kp-it" onclick="pickCoffee('Matcha Latte.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="1.5">
             <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
             <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
           </svg>
@@ -252,7 +1509,7 @@
     </div>
   </div>
 
-  <!-- ========== MODAL: Tech ========== -->
+  <!-- MODAL: Tech -->
   <div class="kp-ov" id="m-tech" onclick="bgClose(event,'tech')">
     <div class="kp-md">
       <div class="kp-hd">
@@ -298,174 +1555,315 @@
     </div>
   </div>
 
-  <!-- ========== MODAL: หนังสือ ========== -->
+  <!-- MODAL: Books (with image preview) -->
   <div class="kp-ov" id="m-books" onclick="bgClose(event,'books')">
     <div class="kp-md">
+      <div class="bk-preview" id="bk-preview"><img id="bk-img" src="" alt="book"></div>
       <div class="kp-hd">
         <h3>📚 หนังสือที่ชอบ</h3><button class="kp-x" onclick="closeM('books')">✕</button>
       </div>
       <div class="kp-grid2">
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#2E8B57" stroke-width="1.5">
+        <div class="kp-it" onclick="pickBook('Atomic Habits.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2E8B57" stroke-width="1.5">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
           </svg>
           <div class="kp-it-t">Atomic Habits</div>
           <div class="kp-it-d">James Clear</div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#8B4513" stroke-width="1.5">
+        <div class="kp-it" onclick="pickBook('The Psychology of Money.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8B4513" stroke-width="1.5">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
           </svg>
           <div class="kp-it-t">The Psychology of Money</div>
           <div class="kp-it-d">Morgan Housel</div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="1.5">
+        <div class="kp-it" onclick="pickBook('Deep Work.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="1.5">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
           </svg>
           <div class="kp-it-t">Deep Work</div>
           <div class="kp-it-d">Cal Newport</div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#E0607C" stroke-width="1.5">
+        <div class="kp-it" onclick="pickBook('Berserk.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E0607C" stroke-width="1.5">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
           </svg>
-          <div class="kp-it-t">Demon Slayer</div>
-          <div class="kp-it-d">Koyoharu Gotouge</div>
+          <div class="kp-it-t">Berserk</div>
+          <div class="kp-it-d">Kentaro Miura</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ========== MODAL: เสื้อผ้า ========== -->
+  <!-- MODAL: Fashion -->
   <div class="kp-ov" id="m-fashion" onclick="bgClose(event,'fashion')">
     <div class="kp-md">
+      <div class="fs-preview" id="fs-preview"><img id="fs-img" src="" alt="fashion"></div>
       <div class="kp-hd">
         <h3>👕 สไตล์การแต่งตัว</h3><button class="kp-x" onclick="closeM('fashion')">✕</button>
       </div>
       <div class="kp-grid2">
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#9B59B6" stroke-width="1.5">
+        <div class="kp-it" onclick="pickFashion('Star boy.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#9B59B6" stroke-width="1.5">
             <path
               d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
           </svg>
-          <div class="kp-it-t">Streetwear</div>
-          <div class="kp-it-d">เสื้อ oversize กางเกง cargo</div>
+          <div class="kp-it-t">Star Boy</div>
+          <div class="kp-it-d">เสื้อยืดสีขาวชั้นใน ตามด้วยเสื้อหนัง กางเกงยืน</div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#E0607C" stroke-width="1.5">
+        <div class="kp-it" onclick="pickFashion('Minimal.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E0607C" stroke-width="1.5">
             <path
               d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
           </svg>
           <div class="kp-it-t">Minimal</div>
           <div class="kp-it-d">สีพื้นเรียบๆ ดูดี</div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="1.5">
+        <div class="kp-it" onclick="pickFashion('Preppy Layered Look.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="1.5">
             <path
               d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
           </svg>
-          <div class="kp-it-t">Y2K</div>
-          <div class="kp-it-d">สีสันจี๊ดจ๊าด ยุค 2000</div>
+          <div class="kp-it-t">Preppy Layered Look</div>
+          <div class="kp-it-d">ลุค สบายๆใส่ไปเที่ยวหรือออกไปพบปะผู้คน</div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="1.5">
+        <div class="kp-it" onclick="pickFashion('Old Money.png', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="1.5">
             <path
               d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
           </svg>
-          <div class="kp-it-t">Cozy</div>
-          <div class="kp-it-d">ใส่สบาย อยู่บ้านก็ได้</div>
+          <div class="kp-it-t">Old Money</div>
+          <div class="kp-it-d">ใส่ไปเที่ยวงานสังสันได้หมด เหมาะกับคนที่อยากได้ความสุภาพ</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ========== MODAL: ท่องเที่ยว ========== -->
+  <!-- MODAL: Travel -->
   <div class="kp-ov" id="m-travel" onclick="bgClose(event,'travel')">
     <div class="kp-md">
       <div class="kp-hd">
         <h3>✈️ สถานที่อยากไป</h3><button class="kp-x" onclick="closeM('travel')">✕</button>
       </div>
-      <div class="kp-grid2">
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#E67E22" stroke-width="1.5">
-            <rect x="6" y="3" width="12" height="18" rx="2" />
-            <line x1="12" y1="8" x2="12" y2="8" />
-            <line x1="8" y1="21" x2="8" y2="3" />
-            <line x1="16" y1="21" x2="16" y2="3" />
-            <path d="M12 3v-1a2 2 0 0 1 4 0v1" />
-          </svg>
-          <div class="kp-it-t">Kyoto, Japan</div>
-          <div class="kp-it-d">วัด ซากุระ ชาเขียว</div>
+      <div class="kp-travel-grid">
+        <div class="kp-travel-card">
+          <div class="kp-travel-body">
+            <h4 class="kp-travel-place">Kyoto, Japan <span class="kp-travel-flag">🇯🇵</span></h4>
+            <p class="kp-travel-why">ทำไมถึงอยากไป</p>
+            <p class="kp-travel-desc">อยากไปสัมผัสบรรยากาศวัดโบราณอายุหลายร้อยปี
+              เดินเล่นริมถนนที่มีซากุระบานสะพรั่งในฤดูใบไม้ผลิ แล้วก็แวะดื่มชาเขียวแท้ๆ
+              เเล้วก็เป็นความฝันตั้งเเต่เด็กๆด้วยว่าอยากจะไปซักครั้งในชีวิต เป็นประเทศที่ไม่ควรพลาด</p>
+            <div class="kp-travel-tags"><span class="kp-travel-tag">วัด</span><span
+                class="kp-travel-tag">ซากุระ</span><span class="kp-travel-tag">ชาเขียว</span></div>
+            <a href="https://www.japan.travel/th/destinations/kansai/kyoto/" target="_blank"
+              class="kp-travel-btn">ข้อมูลเพิ่มเติม</a>
+          </div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#4A90D9" stroke-width="1.5">
-            <rect x="6" y="3" width="12" height="18" rx="2" />
-            <line x1="12" y1="8" x2="12" y2="8" />
-            <line x1="8" y1="21" x2="8" y2="3" />
-            <line x1="16" y1="21" x2="16" y2="3" />
-            <path d="M12 3v-1a2 2 0 0 1 4 0v1" />
-          </svg>
-          <div class="kp-it-t">Seoul, Korea</div>
-          <div class="kp-it-d">ช้อปปิ้ง K-pop สตรีทฟู้ด</div>
+        <div class="kp-travel-card">
+          <div class="kp-travel-body">
+            <h4 class="kp-travel-place">Seoul, Korea <span class="kp-travel-flag">🇰🇷</span></h4>
+            <p class="kp-travel-why">ทำไมถึงอยากไป</p>
+            <p class="kp-travel-desc">อยากไปเที่ยวย่านฮงแดที่เต็มไปด้วยพลังงานของวัยรุ่น
+              ช้อปปิ้งเครื่องสำอางและแฟชั่นเกาหลี ลองกินสตรีทฟู้ดริมถนนอย่างโต๊ปกิและไก่ทอดเกาหลี
+              แล้วก็ต้องไม่พลาดแวะคาเฟ่สวยๆ</p>
+            <div class="kp-travel-tags"><span class="kp-travel-tag">ช้อปปิ้ง</span><span
+                class="kp-travel-tag">K-pop</span><span class="kp-travel-tag">สตรีทฟู้ด</span></div>
+            <a href="https://www.google.com/search?q=Seoul+Korea+travel" target="_blank"
+              class="kp-travel-btn">ข้อมูลเพิ่มเติม</a>
+          </div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#27AE60" stroke-width="1.5">
-            <rect x="6" y="3" width="12" height="18" rx="2" />
-            <line x1="12" y1="8" x2="12" y2="8" />
-            <line x1="8" y1="21" x2="8" y2="3" />
-            <line x1="16" y1="21" x2="16" y2="3" />
-            <path d="M12 3v-1a2 2 0 0 1 4 0v1" />
-          </svg>
-          <div class="kp-it-t">Switzerland</div>
-          <div class="kp-it-d">ภูเขา ธรรมชาติ สงบ</div>
+        <div class="kp-travel-card">
+          <div class="kp-travel-body">
+            <h4 class="kp-travel-place">Switzerland <span class="kp-travel-flag">🇨🇭</span></h4>
+            <p class="kp-travel-why">ทำไมถึงอยากไป</p>
+            <p class="kp-travel-desc">อยากไปนั่งรถไฟ Glacier Express ชมวิวเทือกเขาแอลป์ที่ปกคลุมด้วยหิมะขาวโพลน
+              สูดอากาศบริสุทธิ์ริมทะเลสาบสีฟ้าใส มันเป็นความสงบที่หาไม่ได้ในเมืองใหญ่</p>
+            <div class="kp-travel-tags"><span class="kp-travel-tag">ภูเขา</span><span
+                class="kp-travel-tag">ธรรมชาติ</span><span class="kp-travel-tag">สงบ</span></div>
+            <a href="https://www.google.com/search?q=Switzerland+travel" target="_blank"
+              class="kp-travel-btn">ข้อมูลเพิ่มเติม</a>
+          </div>
         </div>
-        <div class="kp-it"><svg viewBox="0 0 24 24" fill="none" stroke="#E0607C" stroke-width="1.5">
-            <rect x="6" y="3" width="12" height="18" rx="2" />
-            <line x1="12" y1="8" x2="12" y2="8" />
-            <line x1="8" y1="21" x2="8" y2="3" />
-            <line x1="16" y1="21" x2="16" y2="3" />
-            <path d="M12 3v-1a2 2 0 0 1 4 0v1" />
-          </svg>
-          <div class="kp-it-t">New York, USA</div>
-          <div class="kp-it-d">เมืองที่ไม่เคยหลับ</div>
+        <div class="kp-travel-card">
+          <div class="kp-travel-body">
+            <h4 class="kp-travel-place">New York, USA <span class="kp-travel-flag">🇺🇸</span></h4>
+            <p class="kp-travel-why">ทำไมถึงอยากไป</p>
+            <p class="kp-travel-desc">อยากไปยืนบนไทม์สแควร์กลางดึกที่ไฟสีนีออนส่องสว่างทุกที่ทัศนียภาพ
+              ไปเที่ยวเซ็นทรัลพาร์คในฤดูใบไม้ร่วง ดูบรอดเวย์โชว์สดๆ ไม่ว่าจะไปกี่ครั้งก็ไม่มีทางเบื่อ</p>
+            <div class="kp-travel-tags"><span class="kp-travel-tag">เมืองที่ไม่เคยหลับ</span><span
+                class="kp-travel-tag">วัฒนธรรม</span></div>
+            <a href="https://www.google.com/search?q=New+York+USA+travel" target="_blank"
+              class="kp-travel-btn">ข้อมูลเพิ่มเติม</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ========== JAVASCRIPT ใส่ไว้ในไฟล์นี้เลย (ไม่ต้องแยก) ========== -->
-  <script>
-    // ตัวแปรหลัก
-    let cur = null, playing = false, timer = null, prog = 0, dur = 180;
-    let audio = null;
-    let currentTitle = '';
-    let currentArtist = '';
+  <!-- Mini Player -->
+  <div class="mini-player" id="miniPlayer">
+    <div class="mini-cover">🎵</div>
+    <div class="mini-info">
+      <div class="mini-title" id="miniTitle">ยังไม่ได้เลือกเพลง</div>
+      <div class="mini-artist" id="miniArtist">-</div>
+      <div class="mini-progress">
+        <div class="mini-bar" id="miniBar"></div>
+      </div>
+    </div>
+    <div class="mini-controls">
+      <button class="mini-btn" id="miniPlayPause" onclick="togglePlay()">▶</button>
+      <button class="mini-btn mini-close" onclick="stopMusic()">✕</button>
+    </div>
+  </div>
 
-    // เปิด/ปิด Modal
+  <script>
+    let cur = null, playing = false, timer = null, prog = 0, dur = 180, audio = null, noteTimer = null;
+    let currentTitle = '', currentArtist = '';
+
     function openM(t) {
       const m = document.getElementById('m-' + t);
       if (m) { m.classList.add('on'); document.body.style.overflow = 'hidden'; }
-      if (t === 'music') {
-        hideFloatPlayer();
-      }
     }
     function closeM(t) {
       const m = document.getElementById('m-' + t);
       if (m) { m.classList.remove('on'); document.body.style.overflow = ''; }
-      if (t === 'music') {
-        if (playing) {
-          showFloatPlayer();
-        }
-      }
+      if (t === 'coffee') resetCoffee();
+      if (t === 'fashion') resetFashion();
+      if (t === 'books') resetBook();
     }
     function bgClose(e, t) {
       if (e.target === e.currentTarget) closeM(t);
     }
 
-    // สลับแท็บหมวดหมู่เพลง
-    function tab(btn, g) {
-      document.querySelectorAll('.kp-tab').forEach(b => b.classList.remove('on'));
-      btn.classList.add('on');
-      document.querySelectorAll('.kp-sl').forEach(l => {
-        l.classList.toggle('on', l.dataset.g === g);
+    // Coffee
+    function pickCoffee(imgName, el) {
+      const preview = document.getElementById('cf-preview');
+      const img = document.getElementById('cf-img');
+      document.querySelectorAll('#m-coffee .kp-it').forEach(it => it.classList.remove('selected'));
+      el.classList.add('selected');
+      if (!preview.classList.contains('active')) preview.classList.add('active');
+      img.classList.remove('show');
+      setTimeout(() => {
+        img.src = encodeURI(imgName);
+        img.onload = () => img.classList.add('show');
+        if (img.complete && img.naturalWidth > 0) img.classList.add('show');
+      }, 280);
+    }
+    function resetCoffee() {
+      const preview = document.getElementById('cf-preview');
+      const img = document.getElementById('cf-img');
+      if (preview) preview.classList.remove('active');
+      if (img) { img.classList.remove('show'); setTimeout(() => { img.src = ''; }, 300); }
+      document.querySelectorAll('#m-coffee .kp-it').forEach(it => it.classList.remove('selected'));
+    }
+
+    // Fashion
+    function pickFashion(imgName, el) {
+      const preview = document.getElementById('fs-preview');
+      const img = document.getElementById('fs-img');
+      document.querySelectorAll('#m-fashion .kp-it').forEach(it => it.classList.remove('selected'));
+      el.classList.add('selected');
+      if (!preview.classList.contains('active')) preview.classList.add('active');
+      img.classList.remove('show');
+      setTimeout(() => {
+        img.src = encodeURI(imgName);
+        img.onload = () => img.classList.add('show');
+        if (img.complete && img.naturalWidth > 0) img.classList.add('show');
+      }, 280);
+    }
+    function resetFashion() {
+      const preview = document.getElementById('fs-preview');
+      const img = document.getElementById('fs-img');
+      if (preview) preview.classList.remove('active');
+      if (img) { img.classList.remove('show'); setTimeout(() => { img.src = ''; }, 300); }
+      document.querySelectorAll('#m-fashion .kp-it').forEach(it => it.classList.remove('selected'));
+    }
+
+    // Books - NEW!
+    function pickBook(imgName, el) {
+      const preview = document.getElementById('bk-preview');
+      const img = document.getElementById('bk-img');
+      document.querySelectorAll('#m-books .kp-it').forEach(it => it.classList.remove('selected'));
+      el.classList.add('selected');
+      if (!preview.classList.contains('active')) preview.classList.add('active');
+      img.classList.remove('show');
+      setTimeout(() => {
+        img.src = encodeURI(imgName);
+        img.onload = () => img.classList.add('show');
+        if (img.complete && img.naturalWidth > 0) img.classList.add('show');
+      }, 280);
+    }
+    function resetBook() {
+      const preview = document.getElementById('bk-preview');
+      const img = document.getElementById('bk-img');
+      if (preview) preview.classList.remove('active');
+      if (img) { img.classList.remove('show'); setTimeout(() => { img.src = ''; }, 300); }
+      document.querySelectorAll('#m-books .kp-it').forEach(it => it.classList.remove('selected'));
+    }
+
+
+    // ========== Polaroid ==========
+    const polaroidData = [
+      { img: 'ชมพู.jpg', cap: 'Memories ✨' },
+      { img: 'เเว่น.jpg', cap: 'Good Times 🌸' },
+      { img: 'หัวทอง.jpg', cap: 'Best Day 🎀' }
+    ];
+
+    let polaroidOrder = [0, 1, 2]; // 0=front, 1=middle, 2=back
+
+    function cyclePolaroid(clickedIdx) {
+      const currentPos = polaroidOrder.indexOf(clickedIdx);
+      if (currentPos === 0) {
+        // Already on top: send to back, bring next to front
+        const front = polaroidOrder.shift();
+        polaroidOrder.push(front);
+      } else {
+        // Bring clicked to front
+        polaroidOrder = polaroidOrder.filter(i => i !== clickedIdx);
+        polaroidOrder.unshift(clickedIdx);
+      }
+      updatePolaroidStack();
+    }
+
+    function updatePolaroidStack() {
+      const cards = document.querySelectorAll('.polaroid-large-card');
+      cards.forEach((card) => {
+        const idx = parseInt(card.dataset.idx);
+        const pos = polaroidOrder.indexOf(idx);
+        card.className = 'polaroid-large-card pos-' + pos;
       });
     }
 
-    // แปลงวินาทีเป็น m:ss
+    function openPolaroid(idx) {
+      const overlay = document.getElementById('polaroidOverlay');
+      // Bring clicked to front
+      polaroidOrder = polaroidOrder.filter(i => i !== idx);
+      polaroidOrder.unshift(idx);
+      updatePolaroidStack();
+      overlay.classList.add('on');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePolaroid() {
+      const overlay = document.getElementById('polaroidOverlay');
+      overlay.classList.remove('on');
+      document.body.style.overflow = '';
+    }
+
+    function bgClosePolaroid(e) {
+      if (e.target === e.currentTarget) closePolaroid();
+    }
+
+    function tab(btn, g) {
+      document.querySelectorAll('.kp-tab').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      document.querySelectorAll('.kp-sl').forEach(l => { l.classList.toggle('on', l.dataset.g === g); });
+    }
+
     function fmt(s) {
       if (isNaN(s)) return '0:00';
       const m = Math.floor(s / 60);
@@ -473,223 +1871,157 @@
       return m + ':' + sec;
     }
 
-    // โน้ตดนตรีลอยขึ้นแบบต่อเนื่อง
-    let noteInterval = null;
-
-    function startNoteFlow() {
-      if (noteInterval) clearInterval(noteInterval);
-      noteInterval = setInterval(() => {
-        if (!playing) {
-          clearInterval(noteInterval);
-          noteInterval = null;
-          return;
-        }
-        
-        let targetEl = null;
-        const fl = document.getElementById('float-player');
-        
-        if (fl && fl.classList.contains('active')) {
-          targetEl = document.getElementById('fl-np');
-        } else if (cur) {
-          targetEl = cur.querySelector('.kp-ic');
-        }
-        
-        if (targetEl) {
-          spawnNote(targetEl);
-        }
-      }, 700);
-    }
-
-    function spawnNote(el) {
-      if (!el) return;
-      const r = el.getBoundingClientRect();
+    function spawnNote() {
+      const notes = ['♪', '♫', '♬', '♩'];
+      const noteChar = notes[Math.floor(Math.random() * notes.length)];
       const n = document.createElement('span');
       n.className = 'kp-note';
-      const notes = ['♪', '♫', '♩', '♬'];
-      n.textContent = notes[Math.floor(Math.random() * notes.length)];
-      
-      const offsetX = (Math.random() - 0.5) * 24;
-      n.style.left = (r.left + r.width / 2 + offsetX) + 'px';
-      n.style.top = r.top + 'px';
-      
-      const size = 0.8 + Math.random() * 0.5;
-      n.style.fontSize = size + 'rem';
-      
+      n.textContent = noteChar;
+      const startX = window.innerWidth - 100 - Math.random() * 150;
+      const startY = window.innerHeight - 50;
+      n.style.left = startX + 'px';
+      n.style.top = startY + 'px';
+      n.style.fontSize = (0.8 + Math.random() * 0.8) + 'rem';
+      n.style.color = ['#ffb7c5', '#ff8fab', '#e0607c', '#ff6b9d'][Math.floor(Math.random() * 4)];
       document.body.appendChild(n);
-      setTimeout(() => n.remove(), 1200);
+      setTimeout(() => n.remove(), 1500);
+    }
+    function startNotes() {
+      if (noteTimer) clearInterval(noteTimer);
+      spawnNote();
+      noteTimer = setInterval(spawnNote, 800);
+    }
+    function stopNotes() {
+      if (noteTimer) { clearInterval(noteTimer); noteTimer = null; }
     }
 
-    // ฟังก์ชันควบคุมเครื่องเล่นลอย
-    function showFloatPlayer() {
-      const fl = document.getElementById('float-player');
-      if (fl) {
-        fl.classList.add('active');
-        updateFloatUI();
-      }
-    }
-
-    function hideFloatPlayer() {
-      const fl = document.getElementById('float-player');
-      if (fl) {
-        fl.classList.remove('active');
-      }
-    }
-
-    function closeFloatPlayer() {
-      stop();
-      hideFloatPlayer();
-    }
-
-    function updateFloatUI() {
-      const flNp = document.getElementById('fl-np');
-      const flDt = document.getElementById('fl-dt');
-      const flPlay = document.getElementById('fl-play');
-      if (flNp) flNp.textContent = '🎵 ' + currentTitle + ' — ' + (currentArtist || 'ไม่ระบุ');
-      if (flDt) flDt.textContent = fmt(dur);
-      if (flPlay) flPlay.textContent = playing ? '⏸' : '▶';
-    }
-
-    function togglePlay() {
-      const flPlay = document.getElementById('fl-play');
-      if (playing) {
-        if (audio) {
-          audio.pause();
-        } else {
-          if (timer) clearInterval(timer);
-        }
-        playing = false;
-        if (noteInterval) { clearInterval(noteInterval); noteInterval = null; }
-        if (flPlay) flPlay.textContent = '▶';
-        document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
-      } else {
-        if (audio) {
-          audio.play().catch(e => console.log("Audio play failed:", e));
-        } else {
-          if (timer) clearInterval(timer);
-          timer = setInterval(function () {
-            prog += 1;
-            if (prog >= dur) { prog = dur; stop(); }
-            updateBar();
-          }, 1000);
-        }
-        playing = true;
-        startNoteFlow();
-        if (flPlay) flPlay.textContent = '⏸';
-        if (cur) cur.classList.add('play');
-      }
-    }
-
-    // เล่น/หยุดเพลง
-    function play(el, title, artist, src) {
-      spawnNote(el.querySelector('.kp-ic'));
-      if (cur === el && playing) { stop(); return; }
-
-      if (audio) {
-        audio.pause();
-        audio = null;
-      }
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
-      }
-
-      document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
-      cur = el; el.classList.add('play'); playing = true; prog = 0;
-      currentTitle = title;
-      currentArtist = artist;
-      document.getElementById('np').textContent = '🎵 ' + title + ' — ' + (artist || 'ไม่ระบุ');
-      startNoteFlow();
-
-      if (src) {
-        audio = new Audio(src);
-        audio.play().catch(e => console.log("Audio play failed:", e));
-
-        audio.addEventListener('loadedmetadata', () => {
-          dur = Math.floor(audio.duration);
-          document.getElementById('dt').textContent = fmt(dur);
-          updateFloatUI();
-        });
-
-        audio.addEventListener('timeupdate', () => {
-          prog = Math.floor(audio.currentTime);
-          updateBar();
-        });
-
-        audio.addEventListener('ended', () => {
-          stop();
-          hideFloatPlayer();
-        });
-      } else {
-        dur = 180;
-        document.getElementById('dt').textContent = fmt(dur);
-        updateFloatUI();
-        timer = setInterval(function () {
-          prog += 1;
-          if (prog >= dur) { prog = dur; stop(); }
-          updateBar();
-        }, 1000);
-      }
-    }
-
-    function stop() {
+    function stopMusic() {
       playing = false;
       if (timer) { clearInterval(timer); timer = null; }
-      if (audio) {
-        audio.pause();
-        audio = null;
-      }
-      if (noteInterval) { clearInterval(noteInterval); noteInterval = null; }
+      if (audio) { audio.pause(); audio = null; }
+      stopNotes();
       document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
       document.getElementById('np').textContent = '🎵 ยังไม่ได้เลือกเพลง';
-      const flNp = document.getElementById('fl-np');
-      if (flNp) flNp.textContent = '🎵 ยังไม่ได้เลือกเพลง';
-      prog = 0; updateBar(); cur = null;
-      hideFloatPlayer();
+      document.getElementById('miniTitle').textContent = 'ยังไม่ได้เลือกเพลง';
+      document.getElementById('miniArtist').textContent = '-';
+      document.getElementById('miniPlayer').classList.remove('show');
+      prog = 0;
+      updateBar();
+      cur = null;
     }
-
     function updateBar() {
-      // แถบใน Modal
-      const ct = document.getElementById('ct');
-      const fill = document.getElementById('fill');
-      if (ct) ct.textContent = fmt(prog);
-      if (fill) fill.style.width = (prog / dur * 100) + '%';
-
-      // แถบเครื่องเล่นลอย
-      const flCt = document.getElementById('fl-ct');
-      const flFill = document.getElementById('fl-fill');
-      if (flCt) flCt.textContent = fmt(prog);
-      if (flFill) flFill.style.width = (prog / dur * 100) + '%';
+      document.getElementById('ct').textContent = fmt(prog);
+      document.getElementById('fill').style.width = (prog / dur * 100) + '%';
+      document.getElementById('miniBar').style.width = (prog / dur * 100) + '%';
     }
-
+    function togglePlay() {
+      if (!cur) return;
+      if (playing) {
+        playing = false;
+        if (audio) audio.pause();
+        if (timer) { clearInterval(timer); timer = null; }
+        stopNotes();
+        document.getElementById('miniPlayPause').textContent = '▶';
+        cur.querySelector('.kp-ic').textContent = '▶';
+      } else {
+        playing = true;
+        if (audio) audio.play();
+        simulatePlay();
+        startNotes();
+        document.getElementById('miniPlayPause').textContent = '⏸';
+        cur.querySelector('.kp-ic').textContent = '⏸';
+      }
+    }
+    function simulatePlay() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(function () {
+        prog += 1;
+        if (prog >= dur) { prog = dur; stopMusic(); }
+        updateBar();
+      }, 1000);
+    }
     function seek(e) {
       const trk = document.getElementById('trk');
       const rect = trk.getBoundingClientRect();
       const pct = (e.clientX - rect.left) / rect.width;
       const targetTime = pct * dur;
-      if (audio) {
+      if (audio && audio.duration) {
         audio.currentTime = targetTime;
-      } else {
+      } else if (playing) {
         prog = Math.round(targetTime);
         if (prog > dur) prog = dur;
         updateBar();
+      }
+    }
+    function playSong(el) {
+      const title = el.dataset.title;
+      const artist = el.dataset.artist;
+      const src = el.dataset.src;
+      if (cur === el && playing) { togglePlay(); return; }
+      if (audio) { audio.pause(); audio = null; }
+      if (timer) { clearInterval(timer); timer = null; }
+      stopNotes();
+      document.querySelectorAll('.kp-si').forEach(i => i.classList.remove('play'));
+      cur = el;
+      el.classList.add('play');
+      playing = true;
+      prog = 0;
+      currentTitle = title;
+      currentArtist = artist;
+      document.getElementById('np').textContent = '🎵 ' + title + ' — ' + artist;
+      document.getElementById('miniTitle').textContent = title;
+      document.getElementById('miniArtist').textContent = artist;
+      document.getElementById('miniPlayer').classList.add('show');
+      document.getElementById('miniPlayPause').textContent = '⏸';
+      document.querySelectorAll('.kp-ic').forEach(ic => ic.textContent = '▶');
+      el.querySelector('.kp-ic').textContent = '⏸';
+      startNotes();
+      if (src) {
+        var safeSrc = encodeURIComponent(src).replace(/%2F/g, '/');
+        if (!safeSrc.match(/^https?:/)) {
+          safeSrc = safeSrc.replace(/%20/g, ' ').replace(/%27/g, "'");
+        }
+        audio = new Audio(safeSrc);
+        var fallbackDone = false;
+        function doFallback() {
+          if (!fallbackDone) {
+            fallbackDone = true;
+            dur = 180;
+            document.getElementById('dt').textContent = fmt(dur);
+            simulatePlay();
+          }
+        }
+        audio.addEventListener('loadedmetadata', function () {
+          dur = Math.floor(audio.duration) || 180;
+          document.getElementById('dt').textContent = fmt(dur);
+        });
+        audio.addEventListener('timeupdate', function () {
+          if (audio.duration) {
+            prog = Math.floor(audio.currentTime);
+            dur = Math.floor(audio.duration);
+            updateBar();
+          }
+        });
+        audio.addEventListener('ended', function () { stopMusic(); });
+        audio.addEventListener('error', function (e) { doFallback(); });
+        var playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function (e) { doFallback(); });
+        }
+      } else {
+        dur = 180;
+        document.getElementById('dt').textContent = fmt(dur);
+        simulatePlay();
       }
     }
 
-    function seekFloat(e) {
-      const trk = document.getElementById('fl-trk');
-      const rect = trk.getBoundingClientRect();
-      const pct = (e.clientX - rect.left) / rect.width;
-      const targetTime = pct * dur;
-      if (audio) {
-        audio.currentTime = targetTime;
-      } else {
-        prog = Math.round(targetTime);
-        if (prog > dur) prog = dur;
-        updateBar();
-      }
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.kp-si').forEach(function (item) {
+        item.addEventListener('click', function () { playSong(this); });
+      });
+      document.getElementById('trk').addEventListener('click', function (e) { seek(e); });
+    });
   </script>
-
 </body>
 
 </html>

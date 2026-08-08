@@ -1,0 +1,123 @@
+/* ================================================================
+   🃏 Card.css — Absolute pixel positioning for 6 cards
+   ================================================================ */
+.kp-card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: grab;
+  padding: 16px 20px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: background 0.25s, box-shadow 0.3s, border-color 0.25s;
+  z-index: 20;
+  width: 104px;
+  will-change: transform;
+  touch-action: none;
+  user-select: none;
+}
+
+.kp-card:hover {
+  background: #ffffff;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.09), 0 4px 12px rgba(255, 183, 197, 0.2);
+}
+
+.kp-card svg {
+  width: 50px;
+  height: 50px;
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+}
+
+.kp-card:hover svg {
+  transform: translateY(-3px) scale(1.04);
+}
+
+.kp-card span {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #333333;
+  transition: color 0.25s;
+}
+
+/* ===== Exact Non-Overlapping Pixel Positions inside 850px x 520px ===== */
+
+/* 🎧 หูฟัง — บนกลาง */
+.kp-hp {
+  top: 20px;
+  left: 373px;
+  --r: 0deg;
+  animation: cardFloat 3.8s ease-in-out infinite;
+}
+
+/* ☕ กาแฟ — ขวาบน */
+.kp-cf {
+  top: 120px;
+  left: 610px;
+  --r: 6deg;
+  animation: cardFloat 4.1s ease-in-out infinite 0.5s;
+}
+
+/* 💻 คอมพิวเตอร์ — ขวาล่าง */
+.kp-lp {
+  top: 280px;
+  left: 630px;
+  --r: -4deg;
+  animation: cardFloat 3.9s ease-in-out infinite 1s;
+}
+
+/* 🧳 กระเป๋าเดินทาง — ล่างกลาง */
+.kp-lg {
+  top: 385px;
+  left: 373px;
+  --r: 0deg;
+  animation: cardFloat 4s ease-in-out infinite 1.5s;
+}
+
+/* 📚 หนังสือ — ซ้ายล่าง */
+.kp-bk {
+  top: 270px;
+  left: 110px;
+  --r: -6deg;
+  animation: cardFloat 3.7s ease-in-out infinite 2s;
+}
+
+/* 👕 เสื้อผ้า — ซ้ายบน */
+.kp-cl {
+  top: 110px;
+  left: 130px;
+  --r: 6deg;
+  animation: cardFloat 4.2s ease-in-out infinite 2.5s;
+}
+
+/* ===== Drag state ===== */
+.kp-card.dragging {
+  animation: none !important;
+  z-index: 100 !important;
+  cursor: grabbing;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+}
+
+/* ===== Focus ===== */
+.kp-card:focus-visible {
+  outline: 2.5px solid var(--kp-pink3);
+  outline-offset: 3px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .kp-card { width: 85px; padding: 12px 14px; }
+  .kp-card svg { width: 38px; height: 38px; }
+  .kp-card span { font-size: 0.72rem; }
+  .kp-hp { top: 15px; left: calc(50% - 42.5px); }
+  .kp-cf { top: 90px; left: calc(100% - 95px); }
+  .kp-lp { top: 260px; left: calc(100% - 95px); }
+  .kp-lg { top: 380px; left: calc(50% - 42.5px); }
+  .kp-bk { top: 260px; left: 10px; }
+  .kp-cl { top: 90px; left: 10px; }
+}

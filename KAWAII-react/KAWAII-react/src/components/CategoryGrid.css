@@ -1,0 +1,57 @@
+/* ================================================================
+   📦 CategoryGrid.css — Grid items in category modals
+   ================================================================ */
+.kp-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.kp-gi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.4);
+  transition: all 0.25s ease;
+  animation: fadeInItem 0.3s ease-out backwards;
+}
+
+.kp-gi:nth-child(1) { animation-delay: 0.05s; }
+.kp-gi:nth-child(2) { animation-delay: 0.10s; }
+.kp-gi:nth-child(3) { animation-delay: 0.15s; }
+.kp-gi:nth-child(4) { animation-delay: 0.20s; }
+
+@keyframes fadeInItem {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.kp-gi:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.kp-gi svg {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.kp-gi-info .kp-gi-t {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--kp-text);
+}
+
+.kp-gi-info .kp-gi-d {
+  font-size: 0.72rem;
+  color: var(--kp-muted);
+  margin-top: 2px;
+}
+
+@media (max-width: 640px) {
+  .kp-grid2 { grid-template-columns: 1fr; }
+}
